@@ -1,8 +1,10 @@
 package com.gobbledygook.theawless.eventlock2;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -20,7 +22,8 @@ import java.util.ArrayList;
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final int CALENDAR_READ_REQUEST_CODE = 0;
     private static final String TAG = "SETTINGS_FRAGMENT";
-    private int versionCount = 0;
+    private LockcreenReceiver lockcreenReceiver = new LockcreenReceiver();
+    private EventNotificationManager eventNotificationManager = new EventNotificationManager();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,8 +37,12 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     @Override
     public void onStart() {
         super.onStart();
-        Intent intent = new Intent(getActivity(), SchedulingService.class);
-        getActivity().startService(intent);
+        Activity activity = getActivity();
+        Intent intent = new Intent(activity, SchedulingService.class);
+        activity.startService(intent);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        activity.registerReceiver(lockcreenReceiver, intentFilter);
     }
 
     @Override
@@ -53,13 +60,10 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                 editor.putString(key, "0");
                 editor.apply();
             }
-            return;
-        }
-        if (!key.equals(getString(R.string.from_key)) && !key.equals(getString(R.string.to_key)) && !key.equals(getString(R.string.selected_calendars_key))) {
-            return;
         }
         Intent intent = new Intent(getActivity(), SchedulingService.class);
         getActivity().startService(intent);
+        eventNotificationManager.show(getActivity());
     }
 
     void checkAndRequestPermission() {

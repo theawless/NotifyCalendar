@@ -23,6 +23,7 @@
         </activity>
         <receiver android:name=".AlarmReceiver" />
         <service android:name=".SchedulingService" />
+
         <receiver
             android:name=".CommonReceiver"
             android:enabled="true">
@@ -38,6 +39,14 @@
                 <data android:scheme="content" />
                 <action android:name="android.intent.action.PROVIDER_CHANGED" />
                 <data android:host="com.google.android.calendar" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".LockcreenReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.intent.action.SCREEN_OFF" />
             </intent-filter>
         </receiver>
     </application>
