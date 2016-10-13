@@ -27,25 +27,16 @@
             android:numeric="integer"
             android:summary="@string/to_summary"
             android:title="@string/to_title" />
+        <CheckBoxPreference
+            android:defaultValue="@string/always_default"
+            android:key="@string/always_key"
+            android:summary="@string/always_summary"
+            android:title="@string/always_title" />
         <EditTextPreference
             android:defaultValue="@string/free_default"
             android:key="@string/free_key"
             android:summary="@string/free_summary"
             android:title="@string/free_title" />
-        <ListPreference
-            android:defaultValue="@string/time_font_default"
-            android:entries="@array/font_entries"
-            android:entryValues="@array/font_values"
-            android:key="@string/title_font_key"
-            android:summary="@string/title_font_summary"
-            android:title="@string/title_font_title" />
-        <ListPreference
-            android:defaultValue="@string/time_font_default"
-            android:entries="@array/font_entries"
-            android:entryValues="@array/font_values"
-            android:key="@string/time_font_key"
-            android:summary="@string/time_font_summary"
-            android:title="@string/time_font_title" />
     </PreferenceCategory>
     <PreferenceCategory android:title="About">
         <Preference
