@@ -1,4 +1,4 @@
-package com.gobbledygook.theawless.eventlock;
+package com.gobbledygook.theawless.eventlock2;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -10,7 +10,7 @@ import android.util.Log;
 //calls Scheduling Service after required time, then Scheduling service sets the alram again. LOOP.
 public class AlarmReceiver extends WakefulBroadcastReceiver {
     private static final String TAG = AlarmReceiver.class.getSimpleName();
-    PendingIntent alarmIntent;
+    private PendingIntent alarmIntent;
     private AlarmManager alarmManager;
 
     @Override

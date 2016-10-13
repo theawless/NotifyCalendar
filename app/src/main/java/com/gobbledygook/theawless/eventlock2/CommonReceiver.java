@@ -1,4 +1,4 @@
-package com.gobbledygook.theawless.eventlock;
+package com.gobbledygook.theawless.eventlock2;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

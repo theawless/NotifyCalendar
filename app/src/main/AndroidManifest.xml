@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.gobbledygook.theawless.eventlock">
+    package="com.gobbledygook.theawless.eventlock2">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -8,25 +8,10 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/eventlock_icon"
+        android:icon="@drawable/eventlock2_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <provider
-            android:name=".PreferenceProvider"
-            android:authorities="@string/authority"
-            android:exported="true" />
-
-        <meta-data
-            android:name="xposedmodule"
-            android:value="true" />
-        <meta-data
-            android:name="xposeddescription"
-            android:value="Shows calendar events on lockscreen." />
-        <meta-data
-            android:name="xposedminversion"
-            android:value="53" />
-
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -36,7 +21,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <receiver android:name=".AlarmReceiver" />
         <service android:name=".SchedulingService" />
         <receiver

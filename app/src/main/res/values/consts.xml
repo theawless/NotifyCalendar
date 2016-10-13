@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="preferences">event_lock_prefs</string>
-    <string name="authority">com.gobbledygook.theawless.eventlock.preferences</string>
     <string name="selected_calendars_key">selected_calendars_preference_key</string>
     <string name="from_key">from_preference_key</string>
     <string name="to_key">to_preference_key</string>

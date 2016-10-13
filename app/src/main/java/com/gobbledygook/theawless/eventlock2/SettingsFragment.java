@@ -1,4 +1,4 @@
-package com.gobbledygook.theawless.eventlock;
+package com.gobbledygook.theawless.eventlock2;
 
 import android.Manifest;
 import android.content.ContentResolver;
@@ -25,7 +25,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getPreferenceManager().setSharedPreferencesName(PreferenceConsts.preferences);
+        getPreferenceManager().setSharedPreferencesName(getString(R.string.preferences));
         getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
         addPreferencesFromResource(R.xml.preferences);
         checkAndRequestPermission();
@@ -46,7 +46,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(PreferenceConsts.to_key)) {
+        if (key.equals(getString(R.string.to_key))) {
             String keyVal = sharedPreferences.getString(key, "");
             if (keyVal.isEmpty()) {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -55,7 +55,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
             }
             return;
         }
-        if (!key.equals(PreferenceConsts.from_key) && !key.equals(PreferenceConsts.to_key) && !key.equals(PreferenceConsts.selected_calendars_key)) {
+        if (!key.equals(getString(R.string.from_key)) && !key.equals(getString(R.string.to_key)) && !key.equals(getString(R.string.selected_calendars_key))) {
             return;
         }
         Intent intent = new Intent(getActivity(), SchedulingService.class);
@@ -85,7 +85,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
             }
             cursor.close();
         }
-        ListPreference selectedCalendarPref = (ListPreference) findPreference(PreferenceConsts.selected_calendars_key);
+        ListPreference selectedCalendarPref = (ListPreference) findPreference(getString(R.string.selected_calendars_key));
         selectedCalendarPref.setEntries(calendarNames.toArray(new CharSequence[calendarNames.size()]));
         selectedCalendarPref.setEntryValues(calendarIds.toArray(new CharSequence[calendarNames.size()]));
     }

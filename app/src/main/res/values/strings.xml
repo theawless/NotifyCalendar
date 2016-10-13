@@ -1,15 +1,6 @@
 <resources>
-    <string name="app_name">EventLock</string>
+    <string name="app_name">EventLock2</string>
 
-    <string name="xposed_not_installed">Xposed framework is not installed</string>
-    <string name="enable_xposed_module_title">Enable this module</string>
-    <string name="enable_xposed_module_message">For EventLock to function correctly, you must enable the Xposed Module.</string>
-    <string name="enable">Enable</string>
-    <string name="report_bug">Report bug</string>
-    <string name="ignore">Ignore</string>
-    <string name="module_outdated_title">Xposed module updated</string>
-    <string name="module_outdated_message">Please reboot your device for changes to take effect.</string>
-    <string name="reboot">Reboot</string>
     <string name="selected_calendars_summary">This calendar will be used to show the events</string>
     <string name="selected_calendars_title">Selected calendar</string>
     <string name="to_summary">How many days after today should we look for events</string>

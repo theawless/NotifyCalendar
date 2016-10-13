@@ -1,4 +1,4 @@
-package com.gobbledygook.theawless.eventlock;
+package com.gobbledygook.theawless.eventlock2;
 
 
 import android.Manifest;
@@ -39,16 +39,16 @@ public class SchedulingService extends IntentService {
 
     protected void handleIntent(Context context) {
         Log.v(TAG, "handleIntent");
-        SharedPreferences preferences = context.getSharedPreferences(PreferenceConsts.preferences, MODE_PRIVATE);
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.preferences), MODE_PRIVATE);
         Calendar calendar = Calendar.getInstance();
         long from_time = calendar.getTimeInMillis();
-        if (!preferences.getBoolean(PreferenceConsts.from_key, Boolean.parseBoolean(PreferenceConsts.from_default))) {
+        if (!preferences.getBoolean(context.getString(R.string.from_key), Boolean.parseBoolean(context.getString(R.string.from_default)))) {
             calendar.set(Calendar.SECOND, 1);
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.HOUR_OF_DAY, 0);
             from_time = calendar.getTimeInMillis();
         }
-        int to_key_value = Integer.parseInt(preferences.getString(PreferenceConsts.to_key, PreferenceConsts.to_default));
+        int to_key_value = Integer.parseInt(preferences.getString(context.getString(R.string.to_key), context.getString(R.string.to_default)));
         calendar.set(Calendar.SECOND, 59);
         calendar.set(Calendar.MINUTE, 59);
         calendar.set(Calendar.HOUR_OF_DAY, 23);
@@ -57,14 +57,14 @@ public class SchedulingService extends IntentService {
         SharedPreferences.Editor editor = preferences.edit();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context.checkSelfPermission(Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             Log.v(TAG, "No READ_CALENDAR permission");
-            editor.remove(PreferenceConsts.event_title_key);
-            editor.remove(PreferenceConsts.event_time_key);
+            editor.remove(context.getString(R.string.event_title_key));
+            editor.remove(context.getString(R.string.event_time_key));
             return;
         }
         Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI.buildUpon();
         ContentUris.appendId(eventsUriBuilder, from_time);
         ContentUris.appendId(eventsUriBuilder, to_time);
-        String[] selectionArgs = new String[]{preferences.getString(PreferenceConsts.selected_calendars_key, PreferenceConsts.selected_calendars_default)};
+        String[] selectionArgs = new String[]{preferences.getString(context.getString(R.string.selected_calendars_key), context.getString(R.string.selected_calendars_default))};
         Cursor cursor = context.getContentResolver().query(eventsUriBuilder.build(), EVENT_PROJECTION, SELECTION, selectionArgs, CalendarContract.Instances.BEGIN + " ASC");
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -104,8 +104,8 @@ public class SchedulingService extends IntentService {
                     finalTime = finalTime + ", " + context.getString(R.string.after) + " " + (day_diff - 1) + " " + context.getString(R.string.days);
                 }
             }
-            editor.putString(PreferenceConsts.event_title_key, finalTitle);
-            editor.putString(PreferenceConsts.event_time_key, finalTime);
+            editor.putString(context.getString(R.string.event_title_key), finalTitle);
+            editor.putString(context.getString(R.string.event_time_key), finalTime);
             editor.apply();
             //event ends at endTime, let's check back at endTime + 2 second
             alarmReceiver.setAlarm(context, endTime + 1000 * 2);
@@ -114,8 +114,8 @@ public class SchedulingService extends IntentService {
         if (cursor != null) {
             cursor.close();
         }
-        editor.putString(PreferenceConsts.event_title_key, "");
-        editor.putString(PreferenceConsts.event_time_key, "");
+        editor.putString(context.getString(R.string.event_title_key), "");
+        editor.putString(context.getString(R.string.event_time_key), "");
         editor.apply();
         //no events in the upcoming days, let's check back at toTime + 2 second
         alarmReceiver.setAlarm(context, to_time + 1000 * 2);
