@@ -60,6 +60,8 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         getActivity().startService(intent);
         if (sharedPreferences.getBoolean(getString(R.string.always_key), Boolean.parseBoolean(getString(R.string.always_default)))) {
             eventNotificationManager.show(getActivity());
+        } else {
+            eventNotificationManager.cancel(getActivity());
         }
     }
 
