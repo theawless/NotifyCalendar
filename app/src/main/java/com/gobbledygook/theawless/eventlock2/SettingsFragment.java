@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -22,7 +21,6 @@ import java.util.ArrayList;
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final int CALENDAR_READ_REQUEST_CODE = 0;
     private static final String TAG = "SETTINGS_FRAGMENT";
-    private LockcreenReceiver lockcreenReceiver = new LockcreenReceiver();
     private EventNotificationManager eventNotificationManager = new EventNotificationManager();
 
     @Override
@@ -40,9 +38,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         Activity activity = getActivity();
         Intent intent = new Intent(activity, SchedulingService.class);
         activity.startService(intent);
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
-        activity.registerReceiver(lockcreenReceiver, intentFilter);
     }
 
     @Override
@@ -63,7 +58,9 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         }
         Intent intent = new Intent(getActivity(), SchedulingService.class);
         getActivity().startService(intent);
-        eventNotificationManager.show(getActivity());
+        if (sharedPreferences.getBoolean(getString(R.string.always_key), Boolean.parseBoolean(getString(R.string.always_default)))) {
+            eventNotificationManager.show(getActivity());
+        }
     }
 
     void checkAndRequestPermission() {
