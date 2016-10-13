@@ -6,7 +6,6 @@ import android.app.IntentService;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -24,26 +23,10 @@ public class SchedulingService extends IntentService {
     private static final String TAG = "SchedulingService";
     private static final String[] EVENT_PROJECTION = {CalendarContract.Instances.TITLE, CalendarContract.Instances.EVENT_LOCATION, CalendarContract.Instances.BEGIN, CalendarContract.Instances.END, CalendarContract.Instances.ALL_DAY};
     private static final String SELECTION = CalendarContract.Instances.CALENDAR_ID + " = ?";
-    private static LockcreenReceiver lockcreenReceiver;
     private AlarmReceiver alarmReceiver = new AlarmReceiver();
 
     public SchedulingService() {
         super(TAG);
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        lockcreenReceiver = new LockcreenReceiver();
-        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
-        registerReceiver(lockcreenReceiver, intentFilter);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(lockcreenReceiver);
-        lockcreenReceiver = null;
     }
 
     @Override

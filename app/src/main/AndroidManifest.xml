@@ -22,7 +22,9 @@
             </intent-filter>
         </activity>
         <receiver android:name=".AlarmReceiver" />
+
         <service android:name=".SchedulingService" />
+        <service android:name=".LockscreenSchedulingService" />
 
         <receiver
             android:name=".CommonReceiver"

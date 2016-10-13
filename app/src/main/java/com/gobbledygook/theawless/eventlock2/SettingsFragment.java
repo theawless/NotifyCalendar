@@ -36,8 +36,8 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     public void onStart() {
         super.onStart();
         Activity activity = getActivity();
-        Intent intent = new Intent(activity, SchedulingService.class);
-        activity.startService(intent);
+        activity.startService(new Intent(activity, SchedulingService.class));
+        activity.startService(new Intent(activity, LockscreenSchedulingService.class));
     }
 
     @Override
