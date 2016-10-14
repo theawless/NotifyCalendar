@@ -22,7 +22,7 @@
     <string name="at">at</string>
     <string name="projectgithub_title">View project on Github</string>
     <string name="version_title">Version</string>
-    <string name="version_number">1.0.0</string>
+    <string name="version_number">1.1.0</string>
     <string name="start_text">Select a calendar from the main application</string>
     <string name="always_default">false</string>
     <string name="always_summary">Show notification even when device is unlocked</string>
