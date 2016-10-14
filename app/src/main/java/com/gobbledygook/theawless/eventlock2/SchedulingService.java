@@ -136,9 +136,9 @@ public class SchedulingService extends IntentService {
         EventNotificationManager notficationManager = new EventNotificationManager();
         if (isScreenOn()) {
             if (preferences.getBoolean(context.getString(R.string.always_key), Boolean.parseBoolean(context.getString(R.string.always_default))) || isLocked()) {
-                notficationManager.show(this);
+                notficationManager.show(context);
             } else {
-                notficationManager.cancel(this);
+                notficationManager.cancel(context);
             }
         }
     }
