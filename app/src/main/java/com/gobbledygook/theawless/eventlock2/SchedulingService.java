@@ -72,6 +72,7 @@ public class SchedulingService extends IntentService {
         calendar.set(Calendar.SECOND, 59);
         calendar.set(Calendar.MINUTE, 59);
         calendar.set(Calendar.HOUR_OF_DAY, 23);
+        long tonight_time = calendar.getTimeInMillis();
         calendar.add(Calendar.DATE, to_key_value);
         long to_time = calendar.getTimeInMillis();
         Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI.buildUpon();
@@ -118,16 +119,16 @@ public class SchedulingService extends IntentService {
                 }
             }
             //event ends at endTime, let's check back at endTime + 2 second
-            if (endTime < to_time) {
+            if (endTime < tonight_time) {
                 //compulsary check at each midnight
-                to_time = endTime;
+                tonight_time = endTime;
             }
         } else if (cursor != null) {
             cursor.close();
         }
         //no events in the upcoming days, let's check back at midnight + 2 second
         setTitleAndTimePrefs(finalTitle, finalTime);
-        alarmReceiver.setAlarm(context, to_time + 1000 * 2);
+        alarmReceiver.setAlarm(context, tonight_time + 1000 * 2);
     }
 
     private void setTitleAndTimePrefs(String title, String time) {
