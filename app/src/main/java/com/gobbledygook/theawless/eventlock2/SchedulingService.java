@@ -3,17 +3,20 @@ package com.gobbledygook.theawless.eventlock2;
 
 import android.Manifest;
 import android.app.IntentService;
+import android.app.KeyguardManager;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.hardware.display.DisplayManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.CalendarContract;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Display;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -129,6 +132,28 @@ public class SchedulingService extends IntentService {
         //no events in the upcoming days, let's check back at midnight + 2 second
         setTitleAndTimePrefs(finalTitle, finalTime);
         alarmReceiver.setAlarm(context, tonight_time + 1000 * 2);
+        //if the screen is on(on lockscreen or always on mode), update the notification
+        EventNotificationManager notficationManager = new EventNotificationManager();
+        if (isScreenOn()) {
+            if (preferences.getBoolean(context.getString(R.string.always_key), Boolean.parseBoolean(context.getString(R.string.always_default))) || isLocked()) {
+                notficationManager.show(this);
+            } else {
+                notficationManager.cancel(this);
+            }
+        }
+    }
+
+    private boolean isLocked() {
+        return ((KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE)).inKeyguardRestrictedInputMode();
+    }
+
+    private boolean isScreenOn() {
+        for (Display display : ((DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE)).getDisplays()) {
+            if (display.getState() != Display.STATE_OFF) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void setTitleAndTimePrefs(String title, String time) {

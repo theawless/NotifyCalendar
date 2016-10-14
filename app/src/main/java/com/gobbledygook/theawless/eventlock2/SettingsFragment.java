@@ -89,11 +89,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         }
         Intent intent = new Intent(getActivity(), SchedulingService.class);
         getActivity().startService(intent);
-        if (sharedPreferences.getBoolean(getString(R.string.always_key), Boolean.parseBoolean(getString(R.string.always_default)))) {
-            eventNotificationManager.show(getActivity());
-        } else {
-            eventNotificationManager.cancel(getActivity());
-        }
     }
 
     void checkAndRequestPermission() {
