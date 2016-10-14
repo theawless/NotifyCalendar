@@ -77,6 +77,7 @@ public class SchedulingService extends IntentService {
         Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI.buildUpon();
         ContentUris.appendId(eventsUriBuilder, from_time);
         ContentUris.appendId(eventsUriBuilder, to_time);
+        String finalTime = "", finalTitle = "";
         Cursor cursor = context.getContentResolver().query(eventsUriBuilder.build(), EVENT_PROJECTION, selection, selectionArgs, CalendarContract.Instances.BEGIN + " ASC");
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -86,12 +87,12 @@ public class SchedulingService extends IntentService {
             long endTime = cursor.getLong(3);
             int allDay = cursor.getInt(4);
             cursor.close();
-            String finalTitle = eventTitle;
+            finalTitle = eventTitle;
             if (!TextUtils.isEmpty(eventLocation)) {
                 finalTitle = finalTitle + " " + context.getString(R.string.at) + " " + eventLocation;
             }
             DateFormat formatter = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT);
-            String finalTime = formatter.format(beginTime) + " - " + formatter.format(endTime);
+            finalTime = formatter.format(beginTime) + " - " + formatter.format(endTime);
             if (allDay == 1) {
                 finalTime = context.getString(R.string.all_day);
             }
@@ -117,14 +118,15 @@ public class SchedulingService extends IntentService {
                 }
             }
             //event ends at endTime, let's check back at endTime + 2 second
-            setTitleAndTimePrefs(finalTitle, finalTime);
-            alarmReceiver.setAlarm(context, endTime + 1000 * 2);
-            return;
-        }
-        if (cursor != null) {
+            if (endTime < to_time) {
+                //compulsary check at each midnight
+                to_time = endTime;
+            }
+        } else if (cursor != null) {
             cursor.close();
         }
-        //no events in the upcoming days, let's check back at toTime + 2 second
+        //no events in the upcoming days, let's check back at midnight + 2 second
+        setTitleAndTimePrefs(finalTitle, finalTime);
         alarmReceiver.setAlarm(context, to_time + 1000 * 2);
     }
 
