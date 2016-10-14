@@ -10,7 +10,7 @@
     <string name="event_title_key">event_title_preference_key</string>
     <string name="event_time_key">event_time_preference_key</string>
 
-    <string name="to_default">2</string>
+    <string name="to_default">3</string>
     <string name="from_default">true</string>
     <string name="max_events_default">2</string>
     <string name="free_default" />
