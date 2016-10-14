@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">EventLock2</string>
 
-    <string name="selected_calendars_summary">This calendar will be used to show the events</string>
-    <string name="selected_calendars_title">Selected calendar</string>
+    <string name="selected_calendars_summary">These calendars will be used to show the events</string>
+    <string name="selected_calendars_title">Selected calendars</string>
     <string name="to_summary">How many days after today should we look for events</string>
     <string name="to_title">End time</string>
     <string name="from_summary">Enable: now, Disable: yesterday midnight</string>
@@ -28,5 +28,8 @@
     <string name="always_summary">Show notification even when device is unlocked</string>
     <string name="always_title">Always on</string>
     <string name="always_key">always_preference_key</string>
-
+    <string name="version_count_three">What? I thought no one clicked this</string>
+    <string name="version_count_six">Nothing interesting ahead…</string>
+    <string name="version_count_twelve">Still???</string>
+    <string name="version_count_eighteen">The answer is 42.</string>
 </resources>
