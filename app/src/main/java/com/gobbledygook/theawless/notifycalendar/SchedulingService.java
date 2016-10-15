@@ -68,12 +68,6 @@ public class SchedulingService extends IntentService {
         Calendar calendar = Calendar.getInstance();
         long from_time = calendar.getTimeInMillis();
         int today = calendar.get(Calendar.DATE);
-        if (!preferences.getBoolean(context.getString(R.string.from_key), Boolean.parseBoolean(context.getString(R.string.from_default)))) {
-            calendar.set(Calendar.SECOND, 1);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.HOUR_OF_DAY, 0);
-            from_time = calendar.getTimeInMillis();
-        }
         int to_key_value = Integer.parseInt(preferences.getString(context.getString(R.string.to_key), context.getString(R.string.to_default)));
         calendar.set(Calendar.SECOND, 59);
         calendar.set(Calendar.MINUTE, 59);

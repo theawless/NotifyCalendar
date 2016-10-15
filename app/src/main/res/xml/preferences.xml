@@ -6,11 +6,6 @@
             android:key="@string/selected_calendars_key"
             android:summary="@string/selected_calendars_summary"
             android:title="@string/selected_calendars_title" />
-        <CheckBoxPreference
-            android:defaultValue="@string/from_default"
-            android:key="@string/from_key"
-            android:summary="@string/from_summary"
-            android:title="@string/from_title" />
         <EditTextPreference
             android:defaultValue="@string/to_default"
             android:inputType="number"
