@@ -1,4 +1,4 @@
-package com.gobbledygook.theawless.eventlock2;
+package com.gobbledygook.theawless.notifycalendar;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

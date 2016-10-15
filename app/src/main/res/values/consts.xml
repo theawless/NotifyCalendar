@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="preferences">event_lock_prefs</string>
+    <string name="preferences">notify_calendar_prefs</string>
     <string name="selected_calendars_key">selected_calendars_preference_key</string>
     <string name="from_key">from_preference_key</string>
     <string name="to_key">to_preference_key</string>
     <string name="max_events_key">max_events_preference_key</string>
     <string name="free_key">free_preference_key</string>
+    <string name="unlock_key">always_preference_key</string>
+    <string name="lock_key">lock_preference_key</string>
+
 
     <string name="event_title_key">event_title_preference_key</string>
     <string name="event_time_key">event_time_preference_key</string>
 
+
+    <string name="unlock_default">false</string>
+    <string name="lock_default">true</string>
     <string name="to_default">3</string>
     <string name="from_default">true</string>
     <string name="max_events_default">2</string>
     <string name="free_default" />
-
 </resources>

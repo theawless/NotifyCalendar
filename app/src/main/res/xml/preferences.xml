@@ -6,15 +6,6 @@
             android:key="@string/selected_calendars_key"
             android:summary="@string/selected_calendars_summary"
             android:title="@string/selected_calendars_title" />
-        <!--
-        <ListPreference
-            android:defaultValue="@string/max_events_default"
-            android:entries="@array/max_events_entvals"
-            android:entryValues="@array/max_events_entvals"
-            android:key="@string/max_events_key"
-            android:summary="How many events will be shown"
-            android:title="Number of Events" />
-        -->
         <CheckBoxPreference
             android:defaultValue="@string/from_default"
             android:key="@string/from_key"
@@ -28,10 +19,15 @@
             android:summary="@string/to_summary"
             android:title="@string/to_title" />
         <CheckBoxPreference
-            android:defaultValue="@string/always_default"
-            android:key="@string/always_key"
-            android:summary="@string/always_summary"
-            android:title="@string/always_title" />
+            android:defaultValue="@string/unlock_default"
+            android:key="@string/unlock_key"
+            android:summary="@string/unlock_summary"
+            android:title="@string/unlock_title" />
+        <CheckBoxPreference
+            android:defaultValue="@string/lock_default"
+            android:key="@string/lock_key"
+            android:summary="@string/lock_summary"
+            android:title="@string/lock_title" />
         <EditTextPreference
             android:defaultValue="@string/free_default"
             android:key="@string/free_key"
@@ -39,14 +35,6 @@
             android:title="@string/free_title" />
     </PreferenceCategory>
     <PreferenceCategory android:title="About">
-        <!--   <Preference
-               android:summary="@string/github_url"
-               android:title="@string/projectgithub_title">
-               <intent
-                   android:action="android.intent.action.VIEW"
-                   android:data="@string/github_url" />
-           </Preference>
-         -->
         <Preference
             android:summary="@string/version_number"
             android:title="@string/version_title" />

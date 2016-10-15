@@ -1,22 +1,19 @@
-package com.gobbledygook.theawless.eventlock2;
+package com.gobbledygook.theawless.notifycalendar;
 
 
 import android.Manifest;
 import android.app.IntentService;
-import android.app.KeyguardManager;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.hardware.display.DisplayManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.CalendarContract;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Display;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -31,7 +28,6 @@ public class SchedulingService extends IntentService {
     private AlarmReceiver alarmReceiver = new AlarmReceiver();
     private Context context;
     private SharedPreferences preferences;
-
     public SchedulingService() {
         super(TAG);
     }
@@ -59,12 +55,19 @@ public class SchedulingService extends IntentService {
             setTitleAndTimePrefs("", "");
             stopSelf();
         }
-        queryCalendarEvents(buildSelection(selectionArgsSet.size()), selectionArgsSet.toArray(new String[selectionArgsSet.size()]));
+        String selection = buildSelection(selectionArgsSet.size());
+        String[] selectionArgs = selectionArgsSet.toArray(new String[selectionArgsSet.size()]);
+        Event event = queryNormalEvent(selection, selectionArgs);
+        EventNotificationManager notficationManager = new EventNotificationManager(context);
+        notficationManager.handleNotification();
+        setTitleAndTimePrefs(event.title, event.time);
+        alarmReceiver.setAlarm(context, event.alarmTime + 1000 * 2);
     }
 
-    private void queryCalendarEvents(String selection, String[] selectionArgs) {
+    private Event queryNormalEvent(String selection, String[] selectionArgs) {
         Calendar calendar = Calendar.getInstance();
         long from_time = calendar.getTimeInMillis();
+        int today = calendar.get(Calendar.DATE);
         if (!preferences.getBoolean(context.getString(R.string.from_key), Boolean.parseBoolean(context.getString(R.string.from_default)))) {
             calendar.set(Calendar.SECOND, 1);
             calendar.set(Calendar.MINUTE, 0);
@@ -82,29 +85,27 @@ public class SchedulingService extends IntentService {
         ContentUris.appendId(eventsUriBuilder, from_time);
         ContentUris.appendId(eventsUriBuilder, to_time);
         String finalTime = "", finalTitle = "";
+        long alarmTime = tonight_time;
         Cursor cursor = context.getContentResolver().query(eventsUriBuilder.build(), EVENT_PROJECTION, selection, selectionArgs, CalendarContract.Instances.BEGIN + " ASC");
-        if (cursor != null && cursor.getCount() > 0) {
-            cursor.moveToFirst();
+        int day_diff = -1;
+        while (cursor != null && cursor.moveToNext() && day_diff < 0) {
+            int allDay = cursor.getInt(4);
             String eventTitle = cursor.getString(0);
             String eventLocation = cursor.getString(1);
             long beginTime = cursor.getLong(2);
             long endTime = cursor.getLong(3);
-            int allDay = cursor.getInt(4);
-            cursor.close();
             finalTitle = eventTitle;
             if (!TextUtils.isEmpty(eventLocation)) {
                 finalTitle = finalTitle + " " + context.getString(R.string.at) + " " + eventLocation;
             }
             DateFormat formatter = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT);
             finalTime = formatter.format(beginTime) + " - " + formatter.format(endTime);
+            calendar.setTimeInMillis(beginTime);
+            int other_day = calendar.get(Calendar.DATE);
+            day_diff = other_day - today;
             if (allDay == 1) {
                 finalTime = context.getString(R.string.all_day);
             }
-            calendar.add(Calendar.DATE, -to_key_value);
-            int today = calendar.get(Calendar.DATE);
-            calendar.setTimeInMillis(beginTime);
-            int other_day = calendar.get(Calendar.DATE);
-            int day_diff = other_day - today;
             switch (day_diff) {
                 case 0: {
                     break;
@@ -121,39 +122,17 @@ public class SchedulingService extends IntentService {
                     finalTime = finalTime + ", " + context.getString(R.string.after) + " " + (day_diff - 1) + " " + context.getString(R.string.days);
                 }
             }
-            //event ends at endTime, let's check back at endTime + 2 second
-            if (endTime < tonight_time) {
-                //compulsary check at each midnight
-                tonight_time = endTime;
+            if (endTime < alarmTime) {
+                alarmTime = endTime;
             }
-        } else if (cursor != null) {
+        }
+        if (cursor != null) {
             cursor.close();
         }
-        //no events in the upcoming days, let's check back at midnight + 2 second
-        setTitleAndTimePrefs(finalTitle, finalTime);
-        alarmReceiver.setAlarm(context, tonight_time + 1000 * 2);
-        //if the screen is on(on lockscreen or always on mode), update the notification
-        EventNotificationManager notficationManager = new EventNotificationManager();
-        if (isScreenOn()) {
-            if (preferences.getBoolean(context.getString(R.string.always_key), Boolean.parseBoolean(context.getString(R.string.always_default))) || isLocked()) {
-                notficationManager.show(context);
-            } else {
-                notficationManager.cancel(context);
-            }
+        if (day_diff < 0) {
+            return new Event("", "", tonight_time);
         }
-    }
-
-    private boolean isLocked() {
-        return ((KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE)).inKeyguardRestrictedInputMode();
-    }
-
-    private boolean isScreenOn() {
-        for (Display display : ((DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE)).getDisplays()) {
-            if (display.getState() != Display.STATE_OFF) {
-                return true;
-            }
-        }
-        return false;
+        return new Event(finalTitle, finalTime, alarmTime);
     }
 
     private void setTitleAndTimePrefs(String title, String time) {
@@ -162,7 +141,6 @@ public class SchedulingService extends IntentService {
         editor.putString(context.getString(R.string.event_time_key), time);
         editor.apply();
     }
-
 
     private String buildSelection(int length) {
         String selection = "( " + CalendarContract.Instances.CALENDAR_ID + " = ?";
@@ -183,5 +161,17 @@ public class SchedulingService extends IntentService {
             return false;
         }
         return true;
+    }
+
+    private class Event {
+        String time;
+        String title;
+        long alarmTime;
+
+        Event(String title, String time, long alarmTime) {
+            this.time = time;
+            this.title = title;
+            this.alarmTime = alarmTime;
+        }
     }
 }

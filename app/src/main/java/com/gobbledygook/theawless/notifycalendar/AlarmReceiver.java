@@ -1,4 +1,4 @@
-package com.gobbledygook.theawless.eventlock2;
+package com.gobbledygook.theawless.notifycalendar;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;

@@ -1,4 +1,4 @@
-package com.gobbledygook.theawless.eventlock2;
+package com.gobbledygook.theawless.notifycalendar;
 
 import android.Manifest;
 import android.app.Activity;
@@ -23,7 +23,6 @@ import java.util.ArrayList;
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final int CALENDAR_READ_REQUEST_CODE = 0;
     private static final String TAG = "SETTINGS_FRAGMENT";
-    private EventNotificationManager eventNotificationManager = new EventNotificationManager();
     private int versionClickCount = 0;
 
     @Override
@@ -79,13 +78,10 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(getString(R.string.to_key))) {
-            String keyVal = sharedPreferences.getString(key, "");
-            if (keyVal.isEmpty()) {
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString(key, "0");
-                editor.apply();
-            }
+        if (key.equals(getString(R.string.to_key)) && sharedPreferences.getString(key, "").isEmpty()) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(key, "0");
+            editor.apply();
         }
         Intent intent = new Intent(getActivity(), SchedulingService.class);
         getActivity().startService(intent);
